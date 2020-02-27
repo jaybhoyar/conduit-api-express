@@ -13,5 +13,10 @@ router.post(
 	auth.validateJWT,
 	profilesController.followUser
 );
+router.delete(
+	"/:username/follow",
+	auth.validateJWT,
+	profilesController.deletefollowUser
+);
 
 module.exports = router;
