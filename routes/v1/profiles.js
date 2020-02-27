@@ -7,6 +7,7 @@ router.get("/", (req, res) => {
 	res.json({ message: "Welcome to conduit API" });
 });
 
-router.get("/:username", profilesController.getUser);
+router.get("/:username", profilesController.getProfile);
+router.post("/:username/follow", profilesController.followUser);
 
 module.exports = router;

@@ -1,21 +1,12 @@
 var auth = require("../modules/auth");
 var User = require("../models/user");
-
+var format = require("../modules/Format");
 exports.register = async (req, res, next) => {
 	try {
 		const user = await User.create(req.body.user);
 		const token = await auth.generateJWT(user, next);
-		var userInfo = {
-			email: user.email,
-			token,
-			password: user.password,
-			username: user.username,
-			bio: user.bio,
-			image: user.image
-		};
-		res.json({
-			user: userInfo
-		});
+		var resUser = format.userFormat(user, token);
+		res.json(resUser);
 	} catch (error) {
 		next(error);
 	}
@@ -33,50 +24,27 @@ exports.login = async (req, res, next) => {
 		var result = await user.verifyPassword(password);
 		if (!result) return res.status(400).json({ error: "Invalid Password" });
 		var token = await auth.generateJWT(user);
-		var userInfo = {
-			email: user.email,
-			token,
-			username: user.username,
-			bio: user.bio,
-			image: user.image
-		};
-		res.json({
-			user: userInfo
-		});
+		var resUser = format.userFormat(user, token);
+		res.json(resUser);
 	} catch (error) {
 		next(error);
 	}
 };
 exports.currentUser = async (req, res, next) => {
 	try {
-		var user = await User.findById(req.user.userid);
-		var { email, username, bio, image } = user;
-		res.json({
-			user: {
-				email,
-				username,
-				bio,
-				image,
-				token: req.user.token
-			}
-		});
+		var currentuser = await User.findById(req.user.userid);
+		var resUser = format.userFormat(currentuser, req.user.token);
+		res.json(resUser);
 	} catch (error) {
 		next(error);
 	}
 };
 exports.updateUser = async (req, res, next) => {
 	try {
-		var updatedUser = {
-			email: req.body.user.email,
-			password: req.body.user.password,
-			username: req.body.user.username,
-			bio: req.body.user.bio,
-			image: req.body.user.image
-		};
-		var user = await User.findByIdAndUpdate(req.user.userid, updatedUser);
-		res.json({
-			user: user
-		});
+		var user = await User.findByIdAndUpdate(req.user.userid, req.body.user);
+		var newuser = await User.findById(req.user.userid);
+		var resUser = format.userFormat(newuser, req.headers["authorization"]);
+		res.json(resUser);
 	} catch (error) {
 		next(error);
 	}
