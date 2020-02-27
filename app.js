@@ -13,7 +13,7 @@ mongoose.connect(
 		useUnifiedTopology: true
 	},
 	err => {
-		console.log(err ? err : "connected true");
+		console.log(err ? err : "Connected...");
 	}
 );
 var app = express();
