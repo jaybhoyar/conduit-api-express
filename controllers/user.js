@@ -64,3 +64,20 @@ exports.currentUser = async (req, res, next) => {
 		next(error);
 	}
 };
+exports.updateUser = async (req, res, next) => {
+	try {
+		var updatedUser = {
+			email: req.body.user.email,
+			password: req.body.user.password,
+			username: req.body.user.username,
+			bio: req.body.user.bio,
+			image: req.body.user.image
+		};
+		var user = await User.findByIdAndUpdate(req.user.userid, updatedUser);
+		res.json({
+			user: user
+		});
+	} catch (error) {
+		next(error);
+	}
+};

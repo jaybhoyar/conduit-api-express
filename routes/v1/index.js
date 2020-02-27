@@ -11,5 +11,7 @@ router.post("/users", userController.register);
 router.post("/users/login", userController.login);
 // current User
 router.get("/user", auth.validateJWT, userController.currentUser);
+// Update User
+router.put("/user", auth.validateJWT, userController.updateUser);
 
 module.exports = router;

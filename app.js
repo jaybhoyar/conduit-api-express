@@ -12,7 +12,8 @@ mongoose.connect(
 	"mongodb://localhost/conduit-api",
 	{
 		useNewUrlParser: true,
-		useUnifiedTopology: true
+		useUnifiedTopology: true,
+		useFindAndModify: false
 	},
 	err => {
 		console.log(err ? err : "Connected...");
