@@ -8,6 +8,10 @@ router.get("/", (req, res) => {
 });
 
 router.get("/:username", profilesController.getProfile);
-router.post("/:username/follow", profilesController.followUser);
+router.post(
+	"/:username/follow",
+	auth.validateJWT,
+	profilesController.followUser
+);
 
 module.exports = router;
