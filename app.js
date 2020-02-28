@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 var indexRouter = require("./routes/index");
 var v1Router = require("./routes/v1/index.js");
 var profilesRouter = require("./routes/v1/profiles.js");
+var articlesRouter = require("./routes/v1/articles");
 
 require("dotenv").config();
 
@@ -31,6 +32,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Routes
 app.use("/api/v1/profiles", profilesRouter);
+app.use("/api/v1/articles", articlesRouter);
 app.use("/api/v1", v1Router);
 
 app.use("/", indexRouter);
