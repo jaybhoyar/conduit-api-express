@@ -1,5 +1,6 @@
 var Article = require("../models/article");
 var format = require("../modules/Format");
+var slugify = require("slug");
 
 exports.createArticle = async (req, res, next) => {
 	try {
@@ -26,21 +27,45 @@ exports.getSingleArticle = async (req, res, next) => {
 };
 exports.updateArticle = async (req, res, next) => {
 	try {
-		let slug = req.params.slug;
-		var articleToUpdate = await Article.findOne({ slug }).populate(
-			"author"
-		);
-		if (req.user.userid == articleToUpdate.author._id) {
-			let oldArticle = await Article.findByIdAndUpdate(
-				articleToUpdate._id,
-				req.body.article
+		if (req.body.article) {
+			let slug = req.params.slug;
+			var articleToUpdate = await Article.findOne({ slug }).populate(
+				"author"
 			);
-			let articleId = oldArticle._id;
-			var updatedArticle = await Article.findById(articleId);
-			var resArticle = format.singleArticleFormat(updatedArticle);
-			res.json(resArticle);
+			if (req.user.userid == articleToUpdate.author._id) {
+				if (req.body.article.title) {
+					var sluggedTitle = slugify(req.body.article.title, {
+						lower: true
+					});
+					req.body.article.slug = sluggedTitle + "-" + Date.now();
+				}
+				let oldArticle = await Article.findByIdAndUpdate(
+					articleToUpdate._id,
+					req.body.article
+				);
+				let articleId = oldArticle._id;
+				var updatedArticle = await Article.findById(articleId);
+				var resArticle = format.singleArticleFormat(updatedArticle);
+				res.json(resArticle);
+			}
 		} else {
 			res.json({ error: "Invalid user" });
+		}
+	} catch (error) {
+		next(error);
+	}
+};
+exports.deleteArticle = async (req, res, next) => {
+	try {
+		let slug = req.params.slug;
+		var articleToDelete = await Article.findOne({ slug }).populate(
+			"author"
+		);
+		if (req.user.userid == articleToDelete.author._id) {
+			let deletedArticle = await Article.findByIdAndDelete(
+				articleToDelete._id
+			);
+			res.json({ Success: "Article deleted successfully" });
 		}
 	} catch (error) {
 		next(error);

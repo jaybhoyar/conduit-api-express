@@ -41,8 +41,10 @@ var articleSchema = new Schema(
 
 articleSchema.pre("save", async function(next) {
 	try {
-		var sluggedTitle = slug(this.title, { lower: true });
-		this.slug = sluggedTitle + "-" + Date.now();
+		if (this.title) {
+			var sluggedTitle = slug(this.title, { lower: true });
+			this.slug = sluggedTitle + "-" + Date.now();
+		}
 	} catch (error) {
 		next(error);
 	}
