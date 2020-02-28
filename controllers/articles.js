@@ -35,6 +35,10 @@ exports.updateArticle = async (req, res, next) => {
 				articleToUpdate._id,
 				req.body.article
 			);
+			let articleId = oldArticle._id;
+			var updatedArticle = await Article.findById(articleId);
+			var resArticle = format.singleArticleFormat(updatedArticle);
+			res.json(resArticle);
 		} else {
 			res.json({ error: "Invalid user" });
 		}
