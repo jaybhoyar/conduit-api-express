@@ -5,5 +5,6 @@ var auth = require("../../modules/auth");
 
 router.post("/", auth.validateJWT, articleController.createArticle);
 router.get("/:slug", articleController.getSingleArticle);
+router.put("/:slug", auth.validateJWT, articleController.updateArticle);
 
 module.exports = router;
