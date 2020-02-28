@@ -32,7 +32,8 @@ var articleSchema = new Schema(
 			ref: "User"
 		},
 		favoritesCount: {
-			type: Number
+			type: Number,
+			default: 0
 		}
 	},
 	{ timestamps: true }
@@ -40,8 +41,8 @@ var articleSchema = new Schema(
 
 articleSchema.pre("save", async function(next) {
 	try {
-		var slugged = slug(this.title, { lower: true });
-		this.slug = slugged + "-" + this._id;
+		var sluggedTitle = slug(this.title, { lower: true });
+		this.slug = sluggedTitle + "-" + Date.now();
 	} catch (error) {
 		next(error);
 	}
