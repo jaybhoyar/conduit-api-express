@@ -2,6 +2,26 @@ var Article = require("../models/article");
 var format = require("../modules/Format");
 var slugify = require("slug");
 
+exports.listArticles = async (req, res, next) => {
+	try {
+		if (req.query.tag || req.query.author || req.query.fav) {
+			// let tag = req.query.tag;
+			// let author = req.query.author;
+			// let favorited = req.query.favorited;
+			res.json(req.query);
+		} else {
+			let arr = [];
+			let articles = await Article.find().populate("author");
+			arr = articles.map(article => {
+				let eachArticle = format.singleArticleFormat(article);
+				return eachArticle;
+			});
+			res.json({ articles: arr });
+		}
+	} catch (error) {
+		next(error);
+	}
+};
 exports.createArticle = async (req, res, next) => {
 	try {
 		req.body.article.author = req.user.userid;
@@ -46,7 +66,7 @@ exports.updateArticle = async (req, res, next) => {
 				let articleId = oldArticle._id;
 				var updatedArticle = await Article.findById(articleId);
 				var resArticle = format.singleArticleFormat(updatedArticle);
-				res.json(resArticle);
+				res.json({ article: resArticle });
 			}
 		} else {
 			res.json({ error: "Invalid user" });
