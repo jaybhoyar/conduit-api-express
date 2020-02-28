@@ -10,7 +10,7 @@ exports.userFormat = (user, token) => {
 	};
 	return UserFormat;
 };
-exports.profileFormat = (profile, token) => {
+exports.profileFormat = profile => {
 	let ProfileFormat = {
 		profile: {
 			username: profile.username,
@@ -20,4 +20,15 @@ exports.profileFormat = (profile, token) => {
 		}
 	};
 	return ProfileFormat;
+};
+exports.articleFormat = article => {
+	let ArticleFormat = {
+		article: {
+			title: article.title,
+			description: article.title,
+			body: article.title,
+			tagList: article.tagList
+		}
+	};
+	return ArticleFormat;
 };

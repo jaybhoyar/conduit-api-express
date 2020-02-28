@@ -1,5 +1,6 @@
 var mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+var slug = require("slug");
 // var { hash, compare } = require("bcryptjs");
 
 var articleSchema = new Schema(
@@ -36,23 +37,14 @@ var articleSchema = new Schema(
 	},
 	{ timestamps: true }
 );
-// {
-//   "article": {
-//     "slug": "how-to-train-your-dragon",
-//     "title": "How to train your dragon",
-//     "description": "Ever wonder how?",
-//     "body": "It takes a Jacobian",
-//     "tagList": ["dragons", "training"],
-//     "createdAt": "2016-02-18T03:22:56.637Z",
-//     "updatedAt": "2016-02-18T03:48:35.824Z",
-//     "favorited": false,
-//     "favoritesCount": 0,
-//     "author": {
-//       "username": "jake",
-//       "bio": "I work at statefarm",
-//       "image": "https://i.stack.imgur.com/xHWG8.jpg",
-//       "following": false
-//     }
-//   }
-// }
+
+articleSchema.pre("save", async function(next) {
+	try {
+		var slugged = slug(this.title, { lower: true });
+		this.slug = slugged + "-" + this._id;
+	} catch (error) {
+		next(error);
+	}
+});
+
 module.exports = mongoose.model("Article", articleSchema);
