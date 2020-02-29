@@ -7,15 +7,27 @@ exports.createComment = async (req, res, next) => {
 	try {
 		var slug = req.params.slug;
 		req.body.comment.author = req.user.userid;
-
-		const createdComment = await Comment.create(req.body.comment);
+		const createdComment = await (await Comment.create(req.body.comment))
+			.populate("author")
+			.execPopulate();
 		var article = await Article.findOneAndUpdate(
 			{ slug },
-			{ $set: { comments: createdComment._id } }
+			{ $push: { comments: createdComment.id } }
 		);
-		console.log(article);
 		var resComment = format.singleCommentFormat(createdComment);
 		res.json(resComment);
+	} catch (error) {
+		next(error);
+	}
+};
+exports.getMultipleComment = async (req, res, next) => {
+	try {
+		var slug = req.params.slug;
+		var article = await (await Article.findOne({ slug }))
+			.populate("comments").populate()
+			.execPopulate();
+	
+		res.json({ comments: commentsArr });
 	} catch (error) {
 		next(error);
 	}
