@@ -43,3 +43,18 @@ exports.getMultipleComment = async (req, res, next) => {
 		next(error);
 	}
 };
+exports.deleteComment = async (req, res, next) => {
+	try {
+		var slug = req.params.slug;
+		var id = req.params.id;
+		var deletedComment = await Comment.findByIdAndDelete(id);
+		var updateArticle = await Article.findOneAndUpdate(
+			{ slug },
+			{ $pull: { comments: deletedComment.id } }
+		);
+		console.log(deletedComment.id);
+		res.json("Comment Deleted Successfully");
+	} catch (error) {
+		next(error);
+	}
+};

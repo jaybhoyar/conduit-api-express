@@ -17,5 +17,10 @@ router.post(
 	commentsController.createComment
 );
 router.get("/:slug/comments", commentsController.getMultipleComment);
+router.delete(
+	"/:slug/comments/:id",
+	auth.validateJWT,
+	commentsController.deleteComment
+);
 
 module.exports = router;
