@@ -32,7 +32,12 @@ exports.articleFormat = article => {
 	};
 	return ArticleFormat;
 };
-exports.singleArticleFormat = article => {
+exports.singleArticleFormat = (article, userid = false) => {
+	if (article.favoritedBy.includes(userid)) {
+		favorited = true;
+	} else {
+		favorited = false;
+	}
 	return (article = {
 		slug: article.slug,
 		title: article.title,
@@ -41,7 +46,7 @@ exports.singleArticleFormat = article => {
 		tagList: article.tagList,
 		createdAt: article.createdAt,
 		updatedAt: article.updatedAt,
-		favorited: false,
+		favorited: favorited,
 		favoritesCount: article.favoritesCount,
 		author: {
 			username: article.author.username,

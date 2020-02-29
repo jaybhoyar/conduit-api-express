@@ -91,3 +91,41 @@ exports.deleteArticle = async (req, res, next) => {
 		next(error);
 	}
 };
+
+exports.favoriteArticle = async (req, res, next) => {
+	try {
+		slug = req.params.slug;
+		var article = await Article.findOneAndUpdate(
+			{ slug },
+			{
+				$addToSet: {
+					favoritedBy: req.user.userid
+				}
+			},
+			{ new: true }
+		).populate("author");
+		var resArticle = format.singleArticleFormat(article, req.user.userid);
+		res.json({ article: resArticle });
+	} catch (error) {
+		next(error);
+	}
+};
+
+exports.unFavoriteArticle = async (req, res, next) => {
+	try {
+		slug = req.params.slug;
+		var article = await Article.findOneAndUpdate(
+			{ slug },
+			{
+				$pull: {
+					favoritedBy: req.user.userid
+				}
+			},
+			{ new: true }
+		).populate("author");
+		var resArticle = format.singleArticleFormat(article, req.user.userid);
+		res.json({ article: resArticle });
+	} catch (error) {
+		next(error);
+	}
+};

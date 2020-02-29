@@ -9,6 +9,16 @@ router.post("/", auth.validateJWT, articleController.createArticle);
 router.get("/:slug", articleController.getSingleArticle);
 router.put("/:slug", auth.validateJWT, articleController.updateArticle);
 router.delete("/:slug", auth.validateJWT, articleController.deleteArticle);
+router.post(
+	"/:slug/favorite",
+	auth.validateJWT,
+	articleController.favoriteArticle
+);
+router.delete(
+	"/:slug/favorite",
+	auth.validateJWT,
+	articleController.unFavoriteArticle
+);
 
 //  comments
 router.post(

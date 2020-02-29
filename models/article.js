@@ -24,21 +24,26 @@ var articleSchema = new Schema(
 		},
 		tagList: [
 			{
-				type: String
+				type: String,
+				lowercase: true
 			}
 		],
 		author: {
 			type: Schema.Types.ObjectId,
 			ref: "User"
 		},
-		comments: [{
-			type: Schema.Types.ObjectId,
-			ref: "Comment"
-		}],
-		favoritesCount: {
-			type: Number,
-			default: 0
-		}
+		comments: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: "Comment"
+			}
+		],
+		favoritedBy: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: "User"
+			}
+		]
 	},
 	{ timestamps: true }
 );
