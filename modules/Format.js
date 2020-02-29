@@ -40,13 +40,26 @@ exports.singleArticleFormat = article => {
 		body: article.body,
 		tagList: article.tagList,
 		createdAt: article.createdAt,
-		updatedAt: article.createdAt,
+		updatedAt: article.updatedAt,
 		favorited: false,
 		favoritesCount: article.favoritesCount,
 		author: {
 			username: article.author.username,
 			bio: article.author.bio,
 			image: article.author.image,
+			following: false
+		}
+	});
+};
+exports.singleCommentFormat = comment => {
+	return (comment = {
+		body: comment.body,
+		createdAt: comment.createdAt,
+		updatedAt: comment.createdAt,
+		author: {
+			username: comment.author.username,
+			bio: comment.author.bio,
+			image: comment.author.image,
 			following: false
 		}
 	});

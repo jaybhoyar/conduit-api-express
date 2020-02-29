@@ -11,12 +11,12 @@ exports.listArticles = async (req, res, next) => {
 			res.json(req.query);
 		} else {
 			let arr = [];
-			let articles = await Article.find().populate("author");
+			let articles = await Article.find();
 			arr = articles.map(article => {
 				let eachArticle = format.singleArticleFormat(article);
 				return eachArticle;
 			});
-			res.json({ articles: arr });
+			res.json({ articles });
 		}
 	} catch (error) {
 		next(error);
