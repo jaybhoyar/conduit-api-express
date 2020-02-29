@@ -24,10 +24,21 @@ exports.getMultipleComment = async (req, res, next) => {
 	try {
 		var slug = req.params.slug;
 		var article = await (await Article.findOne({ slug }))
-			.populate("comments").populate()
+			.populate({
+				path: "comments",
+				populate: {
+					path: "author",
+					model: "User"
+				}
+			})
 			.execPopulate();
-	
-		res.json({ comments: commentsArr });
+
+		let arr = article.comments.map(comment => {
+			let eachComment = format.singleCommentFormat(comment);
+			return eachComment;
+		});
+
+		res.json({ comments: arr });
 	} catch (error) {
 		next(error);
 	}
