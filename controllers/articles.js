@@ -4,11 +4,20 @@ var slugify = require("slug");
 
 exports.listArticles = async (req, res, next) => {
 	try {
-		if (req.query.tag || req.query.author || req.query.fav) {
+		if (
+			req.query.tag ||
+			req.query.author ||
+			req.query.favorited ||
+			req.query.limit ||
+			req.query.offset
+		) {
 			// let tag = req.query.tag;
 			// let author = req.query.author;
 			// let favorited = req.query.favorited;
-			res.json(req.query);
+			for (const key in req.query) {
+				let articles = await Article.find({ key });
+				res.json(req.query[key]);
+			}
 		} else {
 			let arr = [];
 			let articles = await Article.find();
