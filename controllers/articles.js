@@ -1,4 +1,5 @@
 var Article = require("../models/article");
+var User = require("../models/user");
 var format = require("../modules/Format");
 var slugify = require("slug");
 
@@ -11,10 +12,17 @@ exports.listArticles = async (req, res, next) => {
 				.limit(limit)
 				.populate("author");
 		} else if (req.query.author) {
-			var articles = await Article.find({ author: req.query.author })
+			var user = await User.find({ username: req.query.author })
 				.sort({ updatedAt: -1 })
 				.limit(limit)
-				.populate("author");
+				.populate({
+					path: "articles",
+					populate: {
+						path: "author",
+						model: "User"
+					}
+				});
+			var articles = user[0].articles;
 		} else {
 			var articles = await Article.find();
 		}
@@ -31,6 +39,10 @@ exports.createArticle = async (req, res, next) => {
 	try {
 		req.body.article.author = req.user.userid;
 		const createdArticle = await Article.create(req.body.article);
+		var user = await User.findByIdAndUpdate(req.user.userid, {
+			$addToSet: { articles: createdArticle.id }
+		});
+
 		var token = req.user.token;
 		var resArticle = format.articleFormat(createdArticle, token);
 		res.json(resArticle);

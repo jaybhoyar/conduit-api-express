@@ -26,7 +26,7 @@ var userSchema = new Schema(
 		},
 		bio: String,
 		image: String,
-		article: [
+		articles: [
 			{
 				type: Schema.Types.ObjectId,
 				ref: "Article"
@@ -42,6 +42,12 @@ var userSchema = new Schema(
 			{
 				type: Schema.Types.ObjectId,
 				ref: "User"
+			}
+		],
+		favoriteArticles: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: "Article"
 			}
 		]
 	},
@@ -61,7 +67,11 @@ userSchema.pre("save", async function(next) {
 });
 
 userSchema.methods.verifyPassword = async function(password) {
-	return await compare(password, this.password);
+	try {
+		return await compare(password, this.password);
+	} catch (error) {
+		next(error);
+	}
 };
 
 module.exports = mongoose.model("User", userSchema);
