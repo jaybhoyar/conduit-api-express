@@ -25,7 +25,25 @@ var userSchema = new Schema(
 			default: false
 		},
 		bio: String,
-		image: String
+		image: String,
+		article: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: "Article"
+			}
+		],
+		followers: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: "User"
+			}
+		],
+		following: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: "User"
+			}
+		]
 	},
 	{
 		timestamps: true
