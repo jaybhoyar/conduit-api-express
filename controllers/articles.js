@@ -10,15 +10,19 @@ exports.listArticles = async (req, res, next) => {
 				.sort({ updatedAt: -1 })
 				.limit(limit)
 				.populate("author");
+		} else if (req.query.author) {
+			var articles = await Article.find({ author: req.query.author })
+				.sort({ updatedAt: -1 })
+				.limit(limit)
+				.populate("author");
 		} else {
 			var articles = await Article.find();
 		}
-		let arr = [];
 		arr = articles.map(article => {
 			let eachArticle = format.singleArticleFormat(article);
 			return eachArticle;
 		});
-		res.json({ articles });
+		res.json({ articles: arr, articlesCount: arr.length });
 	} catch (error) {
 		next(error);
 	}

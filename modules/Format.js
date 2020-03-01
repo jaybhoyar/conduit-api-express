@@ -47,7 +47,7 @@ exports.singleArticleFormat = (article, userid = false) => {
 		createdAt: article.createdAt,
 		updatedAt: article.updatedAt,
 		favorited: favorited,
-		favoritesCount: article.favoritesCount,
+		favoritesCount: article.favoritedBy.length,
 		author: {
 			username: article.author.username,
 			bio: article.author.bio,
