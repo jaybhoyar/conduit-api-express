@@ -23,6 +23,18 @@ exports.listArticles = async (req, res, next) => {
 					}
 				});
 			var articles = user[0].articles;
+		} else if (req.query.favorited) {
+			var user = await User.find({ username: req.query.favorited })
+				.sort({ updatedAt: -1 })
+				.limit(limit)
+				.populate({
+					path: "favoriteArticles",
+					populate: {
+						path: "author",
+						model: "User"
+					}
+				});
+			var articles = user[0].favoriteArticles;
 		} else {
 			var articles = await Article.find();
 		}
@@ -121,6 +133,9 @@ exports.favoriteArticle = async (req, res, next) => {
 			},
 			{ new: true }
 		).populate("author");
+		var user = await User.findByIdAndUpdate(req.user.userid, {
+			$addToSet: { favoriteArticles: article.id }
+		});
 		var resArticle = format.singleArticleFormat(article, req.user.userid);
 		res.json({ article: resArticle });
 	} catch (error) {
