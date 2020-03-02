@@ -53,7 +53,20 @@ exports.listArticles = async (req, res, next) => {
 };
 exports.feedArticle = async (req, res, next) => {
 	try {
-		var user = User.findById(req.user.userid);
+		var user = await (await User.findOne({ username: req.user.username }))
+			.populate({
+				path: "following",
+				populate: {
+					path: "articles",
+					model: "Article"
+				}
+			})
+			.execPopulate();
+		arr = user.following[0].articles.map(article => {
+			let eachArticle = format.singleArticleFormat(article);
+			return eachArticle;
+		});
+		res.json({ articles: arr, articlesCount: arr.length });
 	} catch (error) {
 		next(error);
 	}
@@ -65,7 +78,6 @@ exports.createArticle = async (req, res, next) => {
 		var user = await User.findByIdAndUpdate(req.user.userid, {
 			$addToSet: { articles: createdArticle.id }
 		});
-
 		var token = req.user.token;
 		var resArticle = format.articleFormat(createdArticle, token);
 		res.json(resArticle);
