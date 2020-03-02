@@ -5,6 +5,7 @@ var commentsController = require("../../controllers/comments");
 var auth = require("../../modules/auth");
 
 router.get("/", articleController.listArticles);
+router.get("/feed", auth.validateJWT, articleController.feedArticle);
 router.post("/", auth.validateJWT, articleController.createArticle);
 router.get("/:slug", articleController.getSingleArticle);
 router.put("/:slug", auth.validateJWT, articleController.updateArticle);

@@ -51,6 +51,13 @@ exports.listArticles = async (req, res, next) => {
 		next(error);
 	}
 };
+exports.feedArticle = async (req, res, next) => {
+	try {
+		var user = User.findById(req.user.userid);
+	} catch (error) {
+		next(error);
+	}
+};
 exports.createArticle = async (req, res, next) => {
 	try {
 		req.body.article.author = req.user.userid;
