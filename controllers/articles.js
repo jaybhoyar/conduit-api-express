@@ -10,7 +10,8 @@ exports.listArticles = async (req, res, next) => {
 			var articles = await Article.find({ tagList: req.query.tag })
 				.sort({ updatedAt: 1 })
 				.limit(limit)
-				.populate("author");
+        .populate("author");
+        
 		} else if (req.query.author) {
 			var user = await User.findOne({ username: req.query.author })
 				.sort({ updatedAt: 1 })
@@ -46,7 +47,7 @@ exports.listArticles = async (req, res, next) => {
 			let eachArticle = format.singleArticleFormat(article);
 			return eachArticle;
 		});
-		res.json({ articles: arr, articlesCount: arr.length });
+		res.status(200).json({ articles: arr, articlesCount: arr.length });
 	} catch (error) {
 		next(error);
 	}
@@ -66,7 +67,7 @@ exports.feedArticle = async (req, res, next) => {
 			let eachArticle = format.singleArticleFormat(article);
 			return eachArticle;
 		});
-		res.json({ articles: arr, articlesCount: arr.length });
+		res.status(200).json({ articles: arr, articlesCount: arr.length });
 	} catch (error) {
 		next(error);
 	}
@@ -80,7 +81,7 @@ exports.createArticle = async (req, res, next) => {
 		});
 		var token = req.user.token;
 		var resArticle = format.articleFormat(createdArticle, token);
-		res.json(resArticle);
+		res.status(200).json(resArticle);
 	} catch (error) {
 		next(error);
 	}
@@ -92,7 +93,7 @@ exports.getSingleArticle = async (req, res, next) => {
 			"author"
 		);
 		var resArticle = format.singleArticleFormat(singlearticle);
-		res.json(resArticle);
+		res.status(200).json(resArticle);
 	} catch (error) {
 		next(error);
 	}
@@ -117,10 +118,10 @@ exports.updateArticle = async (req, res, next) => {
 					{ new: true }
 				);
 				var resArticle = format.singleArticleFormat(newArticle);
-				res.json({ article: resArticle });
+				res.status(200).json({ article: resArticle });
 			}
 		} else {
-			res.json({ error: "Invalid user" });
+			res.status(200).json({ error: "Invalid user" });
 		}
 	} catch (error) {
 		next(error);
@@ -136,7 +137,7 @@ exports.deleteArticle = async (req, res, next) => {
 			let deletedArticle = await Article.findByIdAndDelete(
 				articleToDelete._id
 			);
-			res.json({ Success: "Article deleted successfully" });
+			res.status(200).json({ Success: "Article deleted successfully" });
 		}
 	} catch (error) {
 		next(error);
@@ -159,7 +160,7 @@ exports.favoriteArticle = async (req, res, next) => {
 			$addToSet: { favoriteArticles: article.id }
 		});
 		var resArticle = format.singleArticleFormat(article, req.user.userid);
-		res.json({ article: resArticle });
+		res.status(200).json({ article: resArticle });
 	} catch (error) {
 		next(error);
 	}
@@ -178,7 +179,7 @@ exports.unFavoriteArticle = async (req, res, next) => {
 			{ new: true }
 		).populate("author");
 		var resArticle = format.singleArticleFormat(article, req.user.userid);
-		res.json({ article: resArticle });
+		res.status(200).json({ article: resArticle });
 	} catch (error) {
 		next(error);
 	}

@@ -15,7 +15,7 @@ exports.createComment = async (req, res, next) => {
 			{ $push: { comments: createdComment.id } }
 		);
 		var resComment = format.singleCommentFormat(createdComment);
-		res.json(resComment);
+		res.status(200).json(resComment);
 	} catch (error) {
 		next(error);
 	}
@@ -38,7 +38,7 @@ exports.getMultipleComment = async (req, res, next) => {
 			return eachComment;
 		});
 
-		res.json({ comments: arr });
+		res.status(200).json({ comments: arr });
 	} catch (error) {
 		next(error);
 	}
@@ -53,7 +53,7 @@ exports.deleteComment = async (req, res, next) => {
 			{ $pull: { comments: deletedComment.id } }
 		);
 		console.log(deletedComment.id);
-		res.json("Comment Deleted Successfully");
+		res.status(200).json("Comment Deleted Successfully");
 	} catch (error) {
 		next(error);
 	}

@@ -5,7 +5,7 @@ exports.getProfile = async (req, res, next) => {
 	try {
 		var user = await User.findOne({ username: req.params.username });
 		var resProfile = format.profileFormat(user);
-		res.json(resProfile);
+		res.status(200).json(resProfile);
 	} catch (error) {
 		next(error);
 	}
@@ -28,7 +28,7 @@ exports.followUser = async (req, res, next) => {
 			{ new: true }
 		);
 		var resProfile = format.profileFormat(userFollowing, req.user.userid);
-		res.json(resProfile);
+		res.status(200).json(resProfile);
 	} catch (error) {
 		next(error);
 	}
@@ -51,7 +51,7 @@ exports.deletefollowUser = async (req, res, next) => {
 			{ new: true }
 		);
 		var resProfile = format.profileFormat(user);
-		res.json(resProfile);
+		res.status(200).json(resProfile);
 	} catch (error) {
 		next(error);
 	}

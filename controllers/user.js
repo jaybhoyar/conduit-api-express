@@ -5,7 +5,7 @@ var format = require("../modules/Format");
 exports.tags = async (req, res, next) => {
 	try {
 		var tags = await Article.find().distinct("tagList");
-		res.json({ tags: tags });
+		res.status(200).json({ tags: tags });
 	} catch (error) {
 		next(error);
 	}
@@ -16,7 +16,7 @@ exports.register = async (req, res, next) => {
 		const user = await User.create(req.body.user);
 		const token = await auth.generateJWT(user, next);
 		var resUser = format.userFormat(user, token);
-		res.json(resUser);
+		res.status(200).json(resUser);
 	} catch (error) {
 		next(error);
 	}
@@ -35,7 +35,7 @@ exports.login = async (req, res, next) => {
 		if (!result) return res.status(400).json({ error: "Invalid Password" });
 		var token = await auth.generateJWT(user);
 		var resUser = format.userFormat(user, token);
-		res.json(resUser);
+		res.status(200).json(resUser);
 	} catch (error) {
 		next(error);
 	}
@@ -44,7 +44,7 @@ exports.currentUser = async (req, res, next) => {
 	try {
 		var currentuser = await User.findById(req.user.userid);
 		var resUser = format.userFormat(currentuser, req.user.token);
-		res.json(resUser);
+		res.status(200).json(resUser);
 	} catch (error) {
 		next(error);
 	}
@@ -54,7 +54,7 @@ exports.updateUser = async (req, res, next) => {
 		var user = await User.findByIdAndUpdate(req.user.userid, req.body.user);
 		var newuser = await User.findById(req.user.userid);
 		var resUser = format.userFormat(newuser, req.headers["authorization"]);
-		res.json(resUser);
+		res.status(200).json(resUser);
 	} catch (error) {
 		next(error);
 	}
