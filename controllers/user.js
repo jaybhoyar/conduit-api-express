@@ -4,7 +4,7 @@ var Article = require("../models/article");
 var format = require("../modules/Format");
 exports.tags = async (req, res, next) => {
 	try {
-		var tags = await Article.find().distinct("tagList");
+		var tags = await Article.distinct("tagList");
 		res.status(200).json({ tags: tags });
 	} catch (error) {
 		next(error);
