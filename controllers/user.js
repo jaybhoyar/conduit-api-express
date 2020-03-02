@@ -1,6 +1,16 @@
 var auth = require("../modules/auth");
 var User = require("../models/user");
+var Article = require("../models/article");
 var format = require("../modules/Format");
+exports.tags = async (req, res, next) => {
+	try {
+		var tags = await Article.find().distinct("tagList");
+		res.json({ tags: tags });
+	} catch (error) {
+		next(error);
+	}
+};
+
 exports.register = async (req, res, next) => {
 	try {
 		const user = await User.create(req.body.user);

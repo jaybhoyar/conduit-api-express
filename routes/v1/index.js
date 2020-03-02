@@ -3,10 +3,7 @@ var router = express.Router();
 var userController = require("../../controllers/user");
 var auth = require("../../modules/auth");
 
-router.get("/", (req, res) => {
-	res.json({ message: "Welcome to conduit API" });
-});
-
+router.get("/tags", userController.tags);
 // Register
 router.post("/users", userController.register);
 // Login

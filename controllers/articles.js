@@ -8,12 +8,12 @@ exports.listArticles = async (req, res, next) => {
 		let limit = req.query.limit || 20;
 		if (req.query.tag) {
 			var articles = await Article.find({ tagList: req.query.tag })
-				.sort({ updatedAt: -1 })
+				.sort({ updatedAt: 1 })
 				.limit(limit)
 				.populate("author");
 		} else if (req.query.author) {
-			var user = await User.find({ username: req.query.author })
-				.sort({ updatedAt: -1 })
+			var user = await User.findOne({ username: req.query.author })
+				.sort({ updatedAt: 1 })
 				.limit(limit)
 				.populate({
 					path: "articles",
@@ -22,10 +22,10 @@ exports.listArticles = async (req, res, next) => {
 						model: "User"
 					}
 				});
-			var articles = user[0].articles;
+			var articles = user.articles;
 		} else if (req.query.favorited) {
-			var user = await User.find({ username: req.query.favorited })
-				.sort({ updatedAt: -1 })
+			var user = await User.findOne({ username: req.query.favorited })
+				.sort({ updatedAt: 1 })
 				.limit(limit)
 				.populate({
 					path: "favoriteArticles",
@@ -34,9 +34,13 @@ exports.listArticles = async (req, res, next) => {
 						model: "User"
 					}
 				});
-			var articles = user[0].favoriteArticles;
-		} else {
+			var articles = user.favoriteArticles;
+		} else if (req.query.limit) {
 			var articles = await Article.find();
+		} else {
+			var articles = await Article.find()
+				.sort({ updatedAt: 1 })
+				.populate("author");
 		}
 		arr = articles.map(article => {
 			let eachArticle = format.singleArticleFormat(article);
@@ -88,13 +92,12 @@ exports.updateArticle = async (req, res, next) => {
 					});
 					req.body.article.slug = sluggedTitle + "-" + Date.now();
 				}
-				let oldArticle = await Article.findByIdAndUpdate(
+				let newArticle = await Article.findByIdAndUpdate(
 					articleToUpdate._id,
-					req.body.article
+					req.body.article,
+					{ new: true }
 				);
-				let articleId = oldArticle._id;
-				var updatedArticle = await Article.findById(articleId);
-				var resArticle = format.singleArticleFormat(updatedArticle);
+				var resArticle = format.singleArticleFormat(newArticle);
 				res.json({ article: resArticle });
 			}
 		} else {

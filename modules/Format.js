@@ -10,13 +10,18 @@ exports.userFormat = (user, token) => {
 	};
 	return UserFormat;
 };
-exports.profileFormat = profile => {
+exports.profileFormat = (profile, userid = false) => {
+	if (profile.followers.includes(userid)) {
+		following = true;
+	} else {
+		following = false;
+	}
 	let ProfileFormat = {
 		profile: {
 			username: profile.username,
 			bio: profile.bio,
 			image: profile.image,
-			following: profile.following
+			following: following
 		}
 	};
 	return ProfileFormat;

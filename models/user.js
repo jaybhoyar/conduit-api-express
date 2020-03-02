@@ -20,10 +20,6 @@ var userSchema = new Schema(
 			type: String,
 			required: true
 		},
-		following: {
-			type: Boolean,
-			default: false
-		},
 		bio: String,
 		image: String,
 		articles: [
