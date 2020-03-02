@@ -10,8 +10,7 @@ exports.listArticles = async (req, res, next) => {
 			var articles = await Article.find({ tagList: req.query.tag })
 				.sort({ updatedAt: 1 })
 				.limit(limit)
-        .populate("author");
-        
+				.populate("author");
 		} else if (req.query.author) {
 			var user = await User.findOne({ username: req.query.author })
 				.sort({ updatedAt: 1 })
@@ -63,11 +62,23 @@ exports.feedArticle = async (req, res, next) => {
 				}
 			})
 			.execPopulate();
-		arr = user.following[0].articles.map(article => {
-			let eachArticle = format.singleArticleFormat(article);
+		let articles = [];
+		user.following.forEach(i => {
+			articles.push(i.articles);
+			return articles;
+		});
+		articles = articles.flat();
+		arr = articles.map(article => {
+			let eachArticle = format.singleArticleFormat(
+				article,
+				req.user.userid
+			);
 			return eachArticle;
 		});
-		res.status(200).json({ articles: arr, articlesCount: arr.length });
+		res.status(200).json({
+			articles: arr,
+			articlesCount: arr.length
+		});
 	} catch (error) {
 		next(error);
 	}
