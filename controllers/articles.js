@@ -67,7 +67,7 @@ exports.feedArticle = async (req, res, next) => {
 			articles.push(i.articles);
 			return articles;
 		});
-		articles = articles.flat();
+		articles = articles.flat().sort((a, b) => b.updatedAt - a.updatedAt);
 		arr = articles.map(article => {
 			let eachArticle = format.singleArticleFormat(
 				article,
