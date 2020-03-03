@@ -14,7 +14,10 @@ exports.createComment = async (req, res, next) => {
 			{ slug },
 			{ $push: { comments: createdComment.id } }
 		);
-		var resComment = format.singleCommentFormat(createdComment);
+		var resComment = format.singleCommentFormat(
+			createdComment,
+			req.user.userid
+		);
 		res.status(200).json(resComment);
 	} catch (error) {
 		next(error);
@@ -34,7 +37,10 @@ exports.getMultipleComment = async (req, res, next) => {
 			.execPopulate();
 
 		let arr = article.comments.map(comment => {
-			let eachComment = format.singleCommentFormat(comment);
+			let eachComment = format.singleCommentFormat(
+				comment,
+				req.user.userid
+			);
 			return eachComment;
 		});
 

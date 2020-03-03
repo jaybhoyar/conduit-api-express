@@ -53,26 +53,14 @@ exports.listArticles = async (req, res, next) => {
 };
 exports.feedArticle = async (req, res, next) => {
 	try {
-		var user = await (await User.findOne({ username: req.user.username }))
-			.populate({
-				path: "following",
-				populate: {
-					path: "articles",
-					model: "Article"
-				}
-			})
-			.execPopulate();
-		let articles = [];
-		user.following.forEach(i => {
-			articles.push(i.articles);
-			return articles;
-		});
-		articles = articles.flat().sort((a, b) => b.updatedAt - a.updatedAt);
+		var user = await User.findById(req.user.userid);
+		var articles = await Article.find({
+			author: { $in: user.following }
+		})
+			.sort({ updatedAt: -1 })
+			.populate("author");
 		arr = articles.map(article => {
-			let eachArticle = format.singleArticleFormat(
-				article,
-				req.user.userid
-			);
+			let eachArticle = format.singleArticleFormat(article, user.id);
 			return eachArticle;
 		});
 		res.status(200).json({

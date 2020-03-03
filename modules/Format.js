@@ -11,11 +11,9 @@ exports.userFormat = (user, token) => {
 	return UserFormat;
 };
 exports.profileFormat = (profile, userid = false) => {
-	if (profile.followers.includes(userid)) {
-		following = true;
-	} else {
-		following = false;
-	}
+	profile.followers.includes(userid)
+		? (following = true)
+		: (following = false);
 	let ProfileFormat = {
 		profile: {
 			username: profile.username,
@@ -37,12 +35,13 @@ exports.articleFormat = article => {
 	};
 	return ArticleFormat;
 };
-exports.singleArticleFormat = (article, userid = false) => {
-	if (article.favoritedBy.includes(userid)) {
-		favorited = true;
-	} else {
-		favorited = false;
-	}
+exports.singleArticleFormat = (article, userid) => {
+	article.favoritedBy.includes(userid)
+		? (favorited = true)
+		: (favorited = false);
+	article.author.followers.includes(userid)
+		? (following = true)
+		: (following = false);
 	return (article = {
 		slug: article.slug,
 		title: article.title,
@@ -57,11 +56,14 @@ exports.singleArticleFormat = (article, userid = false) => {
 			username: article.author.username,
 			bio: article.author.bio,
 			image: article.author.image,
-			following: false
+			following: following
 		}
 	});
 };
-exports.singleCommentFormat = comment => {
+exports.singleCommentFormat = (comment, userid) => {
+	comment.author.followers.includes(userid)
+		? (following = true)
+		: (following = false);
 	return (comment = {
 		body: comment.body,
 		createdAt: comment.createdAt,
