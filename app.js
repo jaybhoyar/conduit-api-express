@@ -8,11 +8,10 @@ var indexRouter = require("./routes/index");
 var v1Router = require("./routes/v1/index.js");
 var profilesRouter = require("./routes/v1/profiles.js");
 var articlesRouter = require("./routes/v1/articles");
-
 require("dotenv").config();
 
 mongoose.connect(
-	"mongodb+srv://test123:polymer1129@cluster0-guz2b.mongodb.net/test?retryWrites=true&w=majorityi",
+	process.env.DBURL,
 	{
 		useNewUrlParser: true,
 		useUnifiedTopology: true,

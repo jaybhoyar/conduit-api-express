@@ -15,7 +15,7 @@ exports.register = async (req, res, next) => {
 	try {
 		const user = await User.create(req.body.user);
 		const token = await auth.generateJWT(user, next);
-		var resUser = format.userFormat(user, token);
+		var resUser = await format.userFormat(user, token);
 		res.status(200).json(resUser);
 	} catch (error) {
 		next(error);
@@ -43,7 +43,7 @@ exports.login = async (req, res, next) => {
 exports.currentUser = async (req, res, next) => {
 	try {
 		var currentuser = await User.findById(req.user.userid);
-		var resUser = format.userFormat(currentuser, req.user.token);
+		var resUser = await format.userFormat(currentuser, req.user.token);
 		res.status(200).json(resUser);
 	} catch (error) {
 		next(error);
