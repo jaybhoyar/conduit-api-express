@@ -12,7 +12,7 @@ var articlesRouter = require("./routes/v1/articles");
 require("dotenv").config();
 
 mongoose.connect(
-	"mongodb://localhost/conduit-api",
+	"mongodb+srv://test123:polymer1129@cluster0-guz2b.mongodb.net/test?retryWrites=true&w=majorityi",
 	{
 		useNewUrlParser: true,
 		useUnifiedTopology: true,

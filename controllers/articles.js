@@ -42,10 +42,12 @@ exports.listArticles = async (req, res, next) => {
 				.sort({ updatedAt: 1 })
 				.populate("author");
 		}
+
 		arr = articles.map(article => {
 			let eachArticle = format.singleArticleFormat(article);
 			return eachArticle;
 		});
+
 		res.status(200).json({ articles: arr, articlesCount: arr.length });
 	} catch (error) {
 		next(error);
