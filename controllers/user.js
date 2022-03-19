@@ -51,9 +51,12 @@ exports.currentUser = async (req, res, next) => {
 };
 exports.updateUser = async (req, res, next) => {
 	try {
-		var user = await User.findByIdAndUpdate(req.user.userid, req.body.user);
-		var newuser = await User.findById(req.user.userid);
-		var resUser = format.userFormat(newuser, req.headers["authorization"]);
+		var user = await User.findByIdAndUpdate(
+			req.user.userid,
+			req.body.user,
+			{ new: true }
+		);
+		var resUser = format.userFormat(user, req.headers["authorization"]);
 		res.status(200).json(resUser);
 	} catch (error) {
 		next(error);
