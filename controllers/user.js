@@ -2,6 +2,7 @@ var auth = require("../modules/auth");
 var User = require("../models/user");
 var Article = require("../models/article");
 var format = require("../modules/Format");
+
 exports.tags = async (req, res, next) => {
 	try {
 		var tags = await Article.distinct("tagList");
@@ -21,6 +22,7 @@ exports.register = async (req, res, next) => {
 		next(error);
 	}
 };
+
 exports.login = async (req, res, next) => {
 	try {
 		var { email, password } = req.body.user;

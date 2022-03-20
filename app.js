@@ -15,8 +15,7 @@ mongoose.connect(
 	{
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
-    useFindAndModify: false,
-    
+		useFindAndModify: false,
 	},
 	(err) => {
 		console.log(err ? err : "Connected...");
@@ -48,11 +47,11 @@ app.use(function (err, req, res, next) {
 	res.locals.message = err.message;
 	res.locals.error = req.app.get("env") === "development" ? err : {};
 	if (err.name === "ValidationError") {
-		res.status(400).json({ err: err.message });
+		res.status(400).json({ error: err.message });
 	}
 	// render the error page
 	res.status(err.status || 500);
-	res.json("error");
+	res.json(err.message || "error");
 });
 
 module.exports = app;
